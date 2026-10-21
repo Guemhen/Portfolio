@@ -9,6 +9,7 @@ import { TextPlaceholder } from "../media/Placeholder";
 import { Parallax } from "../motion/Parallax";
 import { Reveal } from "../motion/Reveal";
 import { SplitHeading } from "../motion/SplitHeading";
+import { DecisionCards } from "../decisions/DecisionCards";
 
 /** The flagship project, presented editorially on the home page. */
 export function FeaturedCase({ project, index = "02" }: { project: Project; index?: string }) {
@@ -69,6 +70,13 @@ export function FeaturedCase({ project, index = "02" }: { project: Project; inde
           {project.outcome ? <p className="text-lg leading-snug">{project.outcome}</p> : <TextPlaceholder>No verified outcome recorded yet</TextPlaceholder>}
         </Reveal>
       </div>
+
+      {/* Design Decision Card(s) */}
+      {project.decisionCards?.length ? (
+        <div className="mx-auto mt-16 max-w-[1440px] px-5 md:mt-24 md:px-10">
+          <DecisionCards project={project} screensHref={`/work/${project.slug}#final-ui`} />
+        </div>
+      ) : null}
 
       {/* Final UI */}
       {finals.length ? (

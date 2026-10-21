@@ -83,6 +83,70 @@ export interface DesignDecision {
   draft?: boolean;
 }
 
+/**
+ * Where a part of a decision came from. Shown as a tag on each answer so
+ * personal aesthetic choices are never mistaken for research findings.
+ */
+export type DecisionSource =
+  | "company-brief" // What the client or company asked for
+  | "stakeholder-feedback"
+  | "aesthetic-preference" // Your personal visual taste
+  | "designer-judgement" // Your reasoning, not tested
+  | "user-research" // Interviews, surveys, field studies you ran
+  | "usability-testing"
+  | "analytics";
+
+/** Sources that count as evidence from users. Everything else is judgement or brief. */
+export const EVIDENCE_SOURCES: DecisionSource[] = ["user-research", "usability-testing", "analytics"];
+
+export type DecisionCardSection = "question" | "problem" | "reasoning" | "tradeoff" | "principle";
+
+/** A region of the card's visual to zoom into while a section is open. */
+export interface VisualFocus {
+  /** Point to centre on, in percent of the displayed (cropped) visual. */
+  x: number;
+  y: number;
+  /** Zoom factor, e.g. 1.8. Keep it under ~2.2 for low-resolution screenshots. */
+  scale: number;
+  /** Short caption shown while zoomed, e.g. "Jura headings on the listing page". */
+  label: string;
+}
+
+/**
+ * Design Decision Card: the thinking behind one design decision, in five
+ * short answers. Add more cards to any project's `decisionCards` array.
+ */
+export interface DesignDecisionCard {
+  /** Unique within the project; used for anchors, e.g. /work/<slug>#visual-identity */
+  id: string;
+  /** Defaults to the project's title. */
+  project?: string;
+  /** The UI element or screen the decision is about. */
+  element: string;
+  /** 1. The question the viewer should ask. */
+  question: string;
+  /** 2. What needed to be solved. */
+  problem: string;
+  /** 3. Why you made this decision. */
+  reasoning: string;
+  /** 4. What you prioritised, and what you gave up. */
+  tradeoff: string;
+  /** 5. The principle, as one memorable line. */
+  principle: string;
+  /** Optional sentence expanding the principle. */
+  principleDetail?: string;
+  /** Short chips shown at the top of the card. */
+  keywords?: string[];
+  /** Phrases emphasised wherever they appear in the answers (case-insensitive). */
+  emphasis?: string[];
+  /** Where each answer comes from. Untagged answers show no source. */
+  sources?: Partial<Record<Exclude<DecisionCardSection, "principle">, DecisionSource>>;
+  /** Optional screenshot or visual reference shown beside the answers. */
+  visual?: ProjectAsset;
+  /** Zoom targets on `visual`, per section. Sections without one show the whole visual. */
+  focus?: Partial<Record<DecisionCardSection, VisualFocus>>;
+}
+
 export interface Project {
   slug: string;
   title: string;
@@ -116,6 +180,8 @@ export interface Project {
   /** Screenshot that the design-decision pins sit on. */
   rationaleAsset?: ProjectAsset;
   decisions?: DesignDecision[];
+  /** Design Decision Cards for this project (see `DesignDecisionCard`). */
+  decisionCards?: DesignDecisionCard[];
   /** Final UI screens. */
   gallery?: ProjectAsset[];
   /** Information architecture and user-flow diagrams. */

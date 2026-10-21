@@ -55,6 +55,21 @@ for (const p of projects) {
     if (d.draft) drafts.push(`${p.title}: decision "${d.title}"`);
   });
   (p.review ?? []).forEach((f) => drafts.push(`${p.title}: ${f}`));
+  const cardIds = new Set();
+  (p.decisionCards ?? []).forEach((c, i) => {
+    const where = `${at}.decisionCards[${i}]`;
+    for (const f of ["id", "element", "question", "problem", "reasoning", "tradeoff", "principle"])
+      if (!c[f] || !String(c[f]).trim()) errors.push(`${where}: missing "${f}"`);
+    if (cardIds.has(c.id)) errors.push(`${where}: duplicate id "${c.id}"`);
+    cardIds.add(c.id);
+    checkAsset(`${where}.visual`, c.visual);
+    for (const [k, f] of Object.entries(c.focus ?? {})) {
+      if (!c.visual) errors.push(`${where}.focus.${k}: has a zoom target but the card has no visual`);
+      if (!inRange(f.x) || !inRange(f.y) || !(f.scale >= 1 && f.scale <= 4)) errors.push(`${where}.focus.${k}: x/y must be 0–100 and scale 1–4`);
+    }
+    const valid = ["company-brief", "stakeholder-feedback", "aesthetic-preference", "designer-judgement", "user-research", "usability-testing", "analytics"];
+    for (const [k, v] of Object.entries(c.sources ?? {})) if (!valid.includes(v)) errors.push(`${where}.sources.${k}: unknown source "${v}"`);
+  });
   if (p.contribution === "team" && !p.contributionDetail) warnings.push(`${at}: team project without contributionDetail (shows a placeholder)`);
 }
 

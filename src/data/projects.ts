@@ -29,10 +29,11 @@ export const projects: Project[] = [
       "I redesigned the UI/UX of a digital marketplace that connects property buyers, sellers and agents across Africa, focusing on a seamless property discovery experience.",
       "The redesign covers four ways people look for a place (buying, renting, short-let stays and hotels), a search-led home page and a listing page that brings price, size and the responsible agent into one view.",
     ],
+    // Your words, from the visual-identity Design Decision Card below.
     challenge:
-      "Bring four different property intents into one marketplace without making any of them harder to use, and make it quick to go from a search to a specific property and the agent responsible for it.",
+      "The company requested a revamp of its old website design. The challenge was to give the existing experience a fresh, distinctive visual identity that felt more modern and aesthetically refined.",
     finalUiNote: "From a search-led home page to a listing with its agent one tap away.",
-    review: ["challenge", "overview[1]", "finalUiNote"],
+    review: ["overview[1]", "finalUiNote"],
     accent: "#F9B52A",
     cover: {
       src: "/images/projects/real-estate-marketplace-africa/home-and-listing-detail-mobile.webp",
@@ -47,6 +48,42 @@ export const projects: Project[] = [
       crop: { x: 22, y: 18, w: 56, h: 63 },
       background: "#FDD98A",
     },
+    decisionCards: [
+      {
+        id: "visual-identity",
+        project: "Real-Estate Marketplace Africa (REM)",
+        element: "Overall website visual identity, typography, and interface styling",
+        question:
+          "How can I revamp the existing website into a sharper, more modern, futuristic experience while maintaining clarity and usability?",
+        problem:
+          "The company requested a revamp of its old website design. The challenge was to give the existing experience a fresh, distinctive visual identity that felt more modern and aesthetically refined.",
+        reasoning:
+          "I gravitate towards futuristic, cyberpunk-inspired aesthetics, particularly designs with sharp details, clean layouts, and a strong visual identity. I used that preference to guide the visual direction of REM. The Jura typeface reinforces the futuristic feel while helping give the interface a distinctive character.",
+        tradeoff:
+          "I prioritised visual sharpness, typography, and a cohesive futuristic aesthetic. I wanted the design to feel bold and visually polished without making the interface unnecessarily complicated. The goal was to balance my preferred visual style with the need for a clear, usable real-estate platform.",
+        principle: "Distinctive visual identity through purposeful simplicity.",
+        principleDetail:
+          "Use typography, spacing, and sharp visual elements to create a memorable interface while keeping the experience clear and easy to navigate.",
+        keywords: ["Futuristic visual identity", "Jura typeface", "Purposeful simplicity"],
+        emphasis: ["futuristic, cyberpunk-inspired aesthetics", "Jura typeface", "visual sharpness", "distinctive visual identity", "purposeful simplicity", "clear, usable"],
+        sources: {
+          problem: "company-brief",
+          reasoning: "aesthetic-preference",
+          tradeoff: "designer-judgement",
+        },
+        visual: {
+          src: "/images/projects/real-estate-marketplace-africa/home-and-listing-detail-mobile.webp",
+          alt: "The REM revamp: home page and listing detail page, showing the Jura typeface, sharp card edges and amber accents.",
+          kind: "multi-screen",
+          crop: { x: 22, y: 18, w: 56, h: 63 },
+          background: "#FDD98A",
+        },
+        focus: {
+          reasoning: { x: 74.6, y: 29.3, scale: 2, label: "Jura headings: listing title and price" },
+          tradeoff: { x: 20.5, y: 32, scale: 1.6, label: "Clean grid and generous spacing on the home page" },
+        },
+      },
+    ],
     decisions: [
       {
         title: "Search comes first",

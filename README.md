@@ -99,6 +99,30 @@ template: decision, user need, constraints, alternatives considered, rationale, 
 validation/outcome. `pin: { x, y }` places its number on the screenshot (in percent).
 Missing fields show as labelled gaps. A missing outcome always reads "No verified outcome recorded yet".
 
+### Design Decision Cards
+`DesignDecisionCard` (`src/components/decisions/`) explains one decision in five short answers:
+the question, the problem, your reasoning, the trade-off, and the design principle. Add cards to a
+project's `decisionCards` array in `projects.ts`. They appear in that project's case study, and the
+flagship's cards also appear on the home page. Fields:
+
+| Field | What goes in it |
+| --- | --- |
+| `id` | Unique anchor, e.g. `visual-identity` → `/work/<slug>#visual-identity` |
+| `project` | Optional display name (defaults to the project title) |
+| `element` | The UI element or screen |
+| `question`, `problem`, `reasoning`, `tradeoff` | The four expandable answers |
+| `principle`, `principleDetail` | The always-visible closing principle |
+| `keywords` | Chips at the top of the card |
+| `emphasis` | Phrases highlighted wherever they appear |
+| `sources` | Where each answer comes from: `company-brief`, `stakeholder-feedback`, `aesthetic-preference`, `designer-judgement`, `user-research`, `usability-testing`, `analytics` |
+| `visual` | Optional screenshot (same format as other assets, `crop` supported) |
+| `focus` | Optional zoom per answer: `{ x, y, scale, label }` in percent of the visual |
+
+The card tags every answer with its source and states in its footer whether any user evidence backs
+the decision, so personal aesthetic choices are never presented as research findings. Opening an
+answer that has a `focus` zooms the screenshot to that area. The headers work with Tab, Enter, ↑ ↓,
+Home and End. `npm run check:assets` validates required fields, ids, sources and zoom values.
+
 ### A new project
 Copy an entry in `projects.ts`, give it a new `slug` and create `public/images/projects/<slug>/`.
 It appears in the work index, the case-study list and at `/work/<slug>` automatically.

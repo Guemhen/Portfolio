@@ -11,6 +11,7 @@ import { BeforeAfter } from "@/components/media/BeforeAfter";
 import { Placeholder, TextPlaceholder } from "@/components/media/Placeholder";
 import { ProjectImage } from "@/components/media/ProjectImage";
 import { RationaleBlock } from "@/components/rationale/RationaleBlock";
+import { DecisionCards } from "@/components/decisions/DecisionCards";
 import { Parallax } from "@/components/motion/Parallax";
 import { Reveal } from "@/components/motion/Reveal";
 import { SplitHeading } from "@/components/motion/SplitHeading";
@@ -29,9 +30,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 const hasVisuals = (p: Project) => [p.cover, ...(p.gallery ?? [])].some((a) => a && resolveImage(a.src));
 
-function Section({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
+function Section({ n, title, id, children }: { n: number; title: string; id?: string; children: React.ReactNode }) {
   return (
-    <section className="mx-auto grid max-w-[1440px] gap-6 border-t border-line px-5 py-14 md:grid-cols-12 md:gap-10 md:px-10 md:py-20">
+    <section id={id} className="mx-auto grid max-w-[1440px] gap-6 border-t border-line px-5 py-14 md:grid-cols-12 md:gap-10 md:px-10 md:py-20">
       <div className="md:col-span-3">
         <div className="md:sticky md:top-24">
           <p className="label flex items-center gap-3">
@@ -73,8 +74,8 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
   const wide = project.cover?.kind === "multi-screen";
 
   let n = 0;
-  const sections: { title: string; body: React.ReactNode }[] = [];
-  const add = (title: string, body: React.ReactNode | null) => body && sections.push({ title, body });
+  const sections: { title: string; body: React.ReactNode; id?: string }[] = [];
+  const add = (title: string, body: React.ReactNode | null, id?: string) => body && sections.push({ title, body, id });
 
   add(
     "Overview",
@@ -87,6 +88,13 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
 
   if (visuals) {
     add("The challenge", project.challenge ? <p className="max-w-[40ch] text-2xl font-medium leading-snug tracking-tight md:text-3xl">{project.challenge}</p> : ph ? <TextPlaceholder>Problem and design challenge not written yet</TextPlaceholder> : null);
+    if (project.decisionCards?.length) {
+      add(
+        project.decisionCards.length > 1 ? "Design decision cards" : "Design decision card",
+        <DecisionCards project={project} screensHref="#final-ui" />,
+        "decision-cards"
+      );
+    }
     add(
       "Research and user needs",
       project.research?.length ? (
@@ -127,7 +135,8 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
         {project.wireframes?.length ? <Gallery items={galleryItems(project.wireframes)} accent={project.accent} /> : pendingFor(project, ["wireframe"])}
         {project.gallery?.length ? <Gallery items={galleryItems()} accent={project.accent} /> : null}
         {pendingFor(project, ["desktop", "mobile", "multi-screen"])}
-      </div>
+      </div>,
+      "final-ui"
     );
     if (project.decisions?.length) {
       add("Why I designed it this way", <RationaleBlock projects={[project]} tabs={false} stacked />);
@@ -235,7 +244,7 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
       ) : null}
 
       {sections.map((s) => (
-        <Section key={s.title} n={++n} title={s.title}>
+        <Section key={s.title} id={s.id} n={++n} title={s.title}>
           {s.body}
         </Section>
       ))}

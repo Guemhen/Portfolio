@@ -181,3 +181,10 @@
   padding: 0.04em 0.1em 0.2em 0.02em;
   margin: -0.04em -0.1em -0.2em -0.02em;
 }
+
+/* Design Decision Card rows wait for their scroll-triggered entrance. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-card]:not([data-revealed]) [data-card-row] {
+    opacity: 0;
+  }
+}
