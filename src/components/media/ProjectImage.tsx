@@ -3,19 +3,26 @@ import { resolveImage } from "@/lib/assets";
 import { Frame } from "./Frame";
 import { Placeholder } from "./Placeholder";
 
-interface ProjectImageProps {
+/** Renders a project asset, or a labelled placeholder if the file is missing. */
+export function ProjectImage({
+  asset,
+  fallbackLabel,
+  sizes,
+  priority,
+  accent,
+  aspect,
+  className,
+  imgClassName,
+}: {
   asset?: ProjectAsset;
-  /** Used for the placeholder when there is no asset at all. */
   fallbackLabel: string;
   sizes: string;
   priority?: boolean;
   accent?: string;
   aspect?: string;
   className?: string;
-}
-
-/** Renders a project asset, or a labelled placeholder if the file is missing. */
-export function ProjectImage({ asset, fallbackLabel, sizes, priority, accent, aspect, className }: ProjectImageProps) {
+  imgClassName?: string;
+}) {
   const image = resolveImage(asset?.src);
   if (!asset || !image) {
     return (
@@ -25,6 +32,7 @@ export function ProjectImage({ asset, fallbackLabel, sizes, priority, accent, as
         expectedPath={asset?.src}
         accent={accent}
         aspect={aspect}
+        className={className}
       />
     );
   }
@@ -39,6 +47,7 @@ export function ProjectImage({ asset, fallbackLabel, sizes, priority, accent, as
       aspect={asset.crop ? undefined : aspect}
       focus={asset.focus}
       className={className}
+      imgClassName={imgClassName}
     />
   );
 }

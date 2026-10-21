@@ -16,6 +16,7 @@ interface FrameProps {
   background?: string;
   priority?: boolean;
   className?: string;
+  imgClassName?: string;
   /** Force an aspect ratio and cover-fit the image inside it. */
   aspect?: string;
   focus?: { x: number; y: number };
@@ -30,8 +31,7 @@ function scaleSizes(sizes: string, factor: number) {
       const last = parts.pop()!;
       const m = last.match(/^(\d+(?:\.\d+)?)(vw|px)$/);
       if (!m) return entry.trim();
-      const scaled = `${Math.ceil(parseFloat(m[1]) * factor)}${m[2]}`;
-      return [...parts, scaled].join(" ");
+      return [...parts, `${Math.ceil(parseFloat(m[1]) * factor)}${m[2]}`].join(" ");
     })
     .join(", ");
 }
@@ -40,23 +40,14 @@ function scaleSizes(sizes: string, factor: number) {
  * Displays a real asset. With `crop`, only that rectangle of the source is
  * visible: the file is untouched, the frame just looks through a window.
  */
-export function Frame({
-  image,
-  alt,
-  sizes,
-  crop,
-  background,
-  priority,
-  className,
-  aspect,
-  focus,
-}: FrameProps) {
-  const style = { background } as React.CSSProperties;
+export function Frame({ image, alt, sizes, crop, background, priority, className = "", imgClassName = "", aspect, focus }: FrameProps) {
+  const base = `relative overflow-hidden ${className}`;
+  const img = `transition-transform duration-[1200ms] ease-[var(--ease-out-expo)] ${imgClassName}`;
 
   if (crop) {
     const ratio = `${(crop.w * image.width).toFixed(0)} / ${(crop.h * image.height).toFixed(0)}`;
     return (
-      <div className={`frame frame--crop ${className ?? ""}`} style={{ ...style, aspectRatio: ratio }}>
+      <div className={base} style={{ background, aspectRatio: ratio }}>
         <Image
           src={image.src}
           alt={alt}
@@ -65,6 +56,7 @@ export function Frame({
           sizes={scaleSizes(sizes, 100 / crop.w)}
           priority={priority}
           quality={90}
+          className={img}
           style={{
             position: "absolute",
             maxWidth: "none",
@@ -80,7 +72,7 @@ export function Frame({
 
   if (aspect) {
     return (
-      <div className={`frame frame--cover ${className ?? ""}`} style={{ ...style, aspectRatio: aspect }}>
+      <div className={base} style={{ background, aspectRatio: aspect }}>
         <Image
           src={image.src}
           alt={alt}
@@ -88,6 +80,7 @@ export function Frame({
           sizes={sizes}
           priority={priority}
           quality={85}
+          className={img}
           style={{ objectFit: "cover", objectPosition: focus ? `${focus.x}% ${focus.y}%` : "center" }}
         />
       </div>
@@ -95,7 +88,7 @@ export function Frame({
   }
 
   return (
-    <div className={`frame ${className ?? ""}`} style={style}>
+    <div className={base} style={{ background }}>
       <Image
         src={image.src}
         alt={alt}
@@ -104,7 +97,7 @@ export function Frame({
         sizes={sizes}
         priority={priority}
         quality={85}
-        style={{ width: "100%", height: "auto", display: "block" }}
+        className={`block h-auto w-full ${img}`}
       />
     </div>
   );
